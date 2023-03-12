@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name        String
+  surname     String
+  patronym    String?
+  mobilePhone String
+  email       String
+
+  birthDate String
+  gender    Int
+
+  passport String
+  inn      String
+  snils    String
+
+  address String
+
+  education    String
+  income       Int
+  incomeSource String
+
+  application Application[]
+  creditScore CreditScore[]
+  decision    Decision[]
+}
+
+model Application {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clientId Int
+  client   Client @relation(fields: [clientId], references: [id])
+
+  applicationDate DateTime
+  expirationDate  DateTime
+
+  loanAmount Int
+  purpose    String
+
+  decision Decision[]
+}
+
+model CreditScore {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clientId Int
+  client   Client @relation(fields: [clientId], references: [id])
+
+  applicationCount     Int
+  applicationOpenCount Int
+  applicationLast      DateTime?
+
+  overduePayments Int?
+  unpaidBalance   Int?
+  bankruptcyCount Int?
+
+  decision Decision[]
+}
+
+model Decision {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clientId      Int
+  client        Client      @relation(fields: [clientId], references: [id])
+  creditScoreId Int
+  creditScore   CreditScore @relation(fields: [creditScoreId], references: [id])
+  applicationId Int
+  application   Application @relation(fields: [applicationId], references: [id])
+
+  status  String
+  message String?
+}
