@@ -37,6 +37,8 @@ model Client {
   application Application[]
   creditScore CreditScore[]
   decision    Decision[]
+
+  @@map("clients")
 }
 
 model Application {
@@ -54,6 +56,8 @@ model Application {
   purpose    String
 
   decision Decision[]
+
+  @@map("applications")
 }
 
 model CreditScore {
@@ -73,6 +77,8 @@ model CreditScore {
   bankruptcyCount Int?
 
   decision Decision[]
+
+  @@map("credit_scores")
 }
 
 model Decision {
@@ -89,4 +95,6 @@ model Decision {
 
   status  String
   message String?
+
+  @@map("decisions")
 }
